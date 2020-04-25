@@ -1,0 +1,5 @@
+AuthType Digest
+AuthName "ipcamera"
+AuthDigestProvider file
+AuthUserFile /home/airadier/ipcamera_app/htdigest
+Require user airadier
