@@ -2,6 +2,9 @@
 
 A very basic IP camera visualizer.
 
+![Capture](doc/capture.png)
+
+
 In my setup, I have an IP camera at home, and a script that is run every second to capture an image like:
 
 ```
