@@ -5,6 +5,9 @@ var url = "getimg"; //url to load image from
 var refreshInterval = 1000; //in ms
 var drawDate = true; //draw date string
 var img;
+var now;
+var delta = -3000;
+var timer;
 
 function init() {
     var canvas = document.getElementById("canvas");
@@ -14,32 +17,82 @@ function init() {
         canvas.setAttribute("width", img.width)
         canvas.setAttribute("height", img.height)
         context.drawImage(this, 0, 0);
+        drawImageDate(context);
+    };
+    img.onerror = function() {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      context.fillStyle = 'red';
+      context.fillText('Image load error', 20, 30);
+      drawImageDate(context);
+
+    };
+    function drawImageDate(context) {
         if(drawDate) {
-            var now = new Date();
             var text = now.toLocaleDateString() + " " + now.toLocaleTimeString();
             var maxWidth = 100;
-            var x = img.width-10-maxWidth;
-            var y = img.height-10;
+            var x = canvas.width-10-maxWidth;
+            var y = canvas.height-10;
             context.strokeStyle = 'black';
             context.lineWidth = 2;
             context.strokeText(text, x, y, maxWidth);
             context.fillStyle = 'white';
             context.fillText(text, x, y, maxWidth);
-        }
-    };
+        } 
+    }
     refresh();
 }
-function refresh()
-{
-    img.src = url + "?t=" + new Date().getTime();
-    setTimeout("refresh()",refreshInterval);
+
+function addDelta(amount) {
+    delta = delta + amount;
+    refresh();
+}
+
+function resetDelta() {
+    delta = -3000;
+    refresh();
+}
+
+function refresh() {
+    if (timer) {
+        clearTimeout(timer);
+    }
+    now = new Date(new Date().getTime() + delta);
+    img.src = url + "?t=" + now.getTime();
+    document.getElementById("viewTime").innerText = now;
+    timer = setTimeout("refresh()",refreshInterval);
 }
 
 </script>
-<title>JavaScript Refresh Example</title>
+<title>IP Webcam Jpeg visualizer</title>
 </head>
-
 <body onload="JavaScript:init();">
-<canvas id="canvas"/>
+<div><canvas id="canvas"></canvas></div>
+<div><span id="viewTime">-</span></div>
+<div>Controls:</div>
+<div>
+    <a href="#" onClick="resetDelta()">[Reset]</a>
+</div>
+<div> 
+    <a href="#" onClick="addDelta(-3600000)">[-1h]</a>
+    <a href="#" onClick="addDelta(-1800000)">[-30m]</a>
+    <a href="#" onClick="addDelta(-600000)">[-10m]</a>
+    <a href="#" onClick="addDelta(-300000)">[-5m]</a>
+    <a href="#" onClick="addDelta(-60000)">[-1m]</a>
+    <a href="#" onClick="addDelta(-30000)">[-30s]</a>
+    <a href="#" onClick="addDelta(-10000)">[-10s]</a>
+    <a href="#" onClick="addDelta(-5000)">[-5s]</a>
+    <a href="#" onClick="addDelta(-1000)">[-1s]</a>
+</div>
+<div>
+    <a href="#" onClick="addDelta(3600000)">[+1h]</a>
+    <a href="#" onClick="addDelta(1800000)">[+30m]</a>
+    <a href="#" onClick="addDelta(600000)">[+10m]</a>
+    <a href="#" onClick="addDelta(300000)">[+5m]</a>
+    <a href="#" onClick="addDelta(60000)">[+1m]</a>
+    <a href="#" onClick="addDelta(30000)">[+30s]</a>
+    <a href="#" onClick="addDelta(10000)">[+10s]</a>
+    <a href="#" onClick="addDelta(5000)">[+5s]</a>
+    <a href="#" onClick="addDelta(1000)">[+1s]</a>
+</div>
 </body>
 </html>
