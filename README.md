@@ -8,7 +8,7 @@ A very basic IP camera visualizer.
 In my setup, I have an IP camera at home, and a script that is run every second to capture an image like:
 
 ```
-curl -s http://user:pass@http://ip-camera/snapshot.cgi > cam-$(date +%Y%m%d-%H%M%S.%6N).jpg
+curl -s http://user:pass@ip-camera:port/snapshot.cgi > cam-$(date +%Y%m%d-%H%M%S.%6N).jpg
 ```
 
 This script, run every second via watch, creates a cam-YYYYmmdd-HHMMSS.ffffff.jpg file, with a millisecond timestamp.
